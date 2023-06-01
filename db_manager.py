@@ -1,10 +1,18 @@
+import psycopg2
 class DBManager:
     def __init__(self):
         pass
 
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании."""
-        pass
+
+        with psycopg2.connect(database='vacancy_db', user='postgres', password=input('DB_Password')) as conn:
+            with conn.cursor() as cur:
+
+
+                    cur.execute('SELECT COUNT(vacancy_id), employer_name FROM infor GROUP BY employer_name')
+                    #conn.commit()
+                    return cur.fetchall()
 
     def get_all_vacancies(self):
         """Получает список всех вакансий с указанием названия компании, названия

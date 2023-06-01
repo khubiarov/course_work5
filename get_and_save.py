@@ -31,7 +31,7 @@ class GetAndSave:
         """Сохраняет запрошенные данные от апи в бд"""
         data = self.get_vacancy()
         count = 1
-        with psycopg2.connect(database='vacancy_db', user='postgres', password='Rikitikitavi13245') as conn:
+        with psycopg2.connect(database='vacancy_db', user='postgres', password=input('Db_password')) as conn:
             with conn.cursor() as cur:
                 for row in data['items']:
 
@@ -41,7 +41,7 @@ class GetAndSave:
                     print(row)
 
                     cur.execute(
-                        f'INSERT INTO infor(vacancy_id, _name, area_name, address, vac_number) VALUES (%s, %s, %s, %s, %s, %s)',
+                        f'INSERT INTO infor(vacancy_id, _name, area_name, address, vac_number, employer_name) VALUES (%s, %s, %s, %s, %s, %s)',
                         (row['id'], row["name"], row["area"]['name'], row["address"]['city'], count, row['employer']['name']))
                     count += 1
                     conn.commit()
