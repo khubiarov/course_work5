@@ -32,13 +32,18 @@ class DBManager:
     def get_vacancies_with_higher_salary(self):
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
         avg_number = self.get_avg_salary()
-        return self.command_sender(f'SELECT * from infor WHERE salary_from > {avg_number}')
+        return self.command_sender(f'SELECT * from infor WHERE salary_from > (select AVG(salary_from) '
+                                   f'from infor)')
 
-    def get_vacancies_with_keyword(self):
+
+    def get_vacancies_with_keyword(self,key_word):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”."""
+        return self.command_sender(f"SELECT * FROM infor WHERE LOWER(_name) IN (SELECT LOWER('{key_word}'));")
 
     def quit_from_app(self):
         exit()
 
-copy1 = DBManager('Rikitikitavi13245')
-print(copy1.get_avg_salary())
+
+#while True:
+#    copy1 = DBManager('Rikitikitavi13245')
+#    print(copy1.get_vacancies_with_keyword(input()))

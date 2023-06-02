@@ -14,11 +14,17 @@ if __name__ == "__main__":
                 print(copy_db_manager.get_companies_and_vacancies_count())
             elif int(usr_inp) == 2:
                 print(copy_db_manager.get_all_vacancies())
-            elif int(usr_inp) == 3:
+            elif int(usr_inp) == 4:
                 print(copy_db_manager.get_vacancies_with_higher_salary())
+            elif int(usr_inp) == 3:
+                print(copy_db_manager.get_avg_salary())
+            elif int(usr_inp) == 5:
+                print(copy_db_manager.get_vacancies_with_keyword(input('по-какому слову искать?')))
+            else:
+                print('Ошибка')
         if usr_inp.isalpha():
             if str(usr_inp).lower() == 'q':
                 copy_db_manager.quit_from_app()
 
-        else:
-            print('Ошибка')
+            else:
+                print('Ошибка')
