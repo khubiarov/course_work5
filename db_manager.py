@@ -1,32 +1,44 @@
 import psycopg2
+
 class DBManager:
-    def __init__(self):
-        pass
+    def __init__(self, passwd):
+        self.passwd = passwd
 
-    def get_companies_and_vacancies_count(self):
-        """Получает список всех компаний и количество вакансий у каждой компании."""
-
-        with psycopg2.connect(database='vacancy_db', user='postgres', password=input('DB_Password')) as conn:
+    def command_sender(self, command):
+        with psycopg2.connect(database='vacancy_db', user='postgres', password=self.passwd) as conn:
             with conn.cursor() as cur:
 
 
-                    cur.execute('SELECT COUNT(vacancy_id), employer_name FROM infor GROUP BY employer_name')
+                    cur.execute(command)
                     #conn.commit()
                     return cur.fetchall()
+
+    def get_companies_and_vacancies_count(self):
+        """Получает список всех компаний и количество вакансий у каждой компании."""
+        return self.command_sender('SELECT COUNT(vacancy_id), employer_name FROM infor GROUP BY employer_name')
 
     def get_all_vacancies(self):
         """Получает список всех вакансий с указанием названия компании, названия
         вакансии и зарплаты и ссылки на вакансию."""
-        pass
+        return self.command_sender('SELECT employer_name, _name, salary_from, salary_to, salary_currency, '
+                                   'employer_alternate_url FROM infor')
 
     def get_avg_salary(self):
         """Получает среднюю зарплату по вакансиям."""
-
-        pass
+        #return self.command_sender('')
+        avg_salary = self.command_sender('SELECT AVG(salary_from) FROM infor')
+        return avg_salary[0]
 
     def get_vacancies_with_higher_salary(self):
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
-        pass
+        avg_number = self.get_avg_salary()
+        return self.command_sender(f'SELECT * from infor WHERE salary_from > {avg_number}')
 
     def get_vacancies_with_keyword(self):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”."""
+
+    def quit_from_app(self):
+        exit()
+
+copy1 = DBManager('Rikitikitavi13245')
+print(copy1.get_avg_salary())

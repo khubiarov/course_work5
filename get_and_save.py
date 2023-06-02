@@ -2,8 +2,8 @@ import requests, json, psycopg2, csv
 
 
 class GetAndSave:
-    def __init__(self):
-        #self.name = input('Введите...')
+    def __init__(self, passwd):
+        self.passwd = passwd
         self.company_url = ''
 
     def read_list(self):
@@ -31,19 +31,28 @@ class GetAndSave:
         """Сохраняет запрошенные данные от апи в бд"""
         data = self.get_vacancy()
         count = 1
-        with psycopg2.connect(database='vacancy_db', user='postgres', password=input('Db_password')) as conn:
+        with psycopg2.connect(database='vacancy_db', user='postgres', password=self.passwd) as conn:
             with conn.cursor() as cur:
                 for row in data['items']:
 
                     if row.get('address') is None:
                         row['address'] = {}
                         row['address']['city'] = None
-                    print(row)
+
+                    if row.get('salary') is None:
+                        row['salary'] = {}
+                        row["salary"]['to'] = None
+                        row['salary']['currency'] = None
+                        row['salary']['from'] = None
 
                     cur.execute(
-                        f'INSERT INTO infor(vacancy_id, _name, area_name, address, vac_number, employer_name) VALUES (%s, %s, %s, %s, %s, %s)',
-                        (row['id'], row["name"], row["area"]['name'], row["address"]['city'], count, row['employer']['name']))
-                    count += 1
+                        f'INSERT INTO infor(vacancy_id, _name, area_name, address, employer_name, '
+                        f'employer_alternate_url, salary_from, salary_to, salary_currency ) '
+                        f'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (row['id'], row["name"], row["area"]['name'], row["address"]['city'],
+                         row['employer']['name'], row['employer']['alternate_url'], row['salary']['from'],
+                         row['salary']['to'], row['salary']['currency']))
+                    #count += 1
                     conn.commit()
 
                     #cur.execute("SELECT * FROM infor ")
