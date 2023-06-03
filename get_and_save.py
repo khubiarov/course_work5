@@ -1,13 +1,17 @@
 import requests, json, psycopg2, csv
 
 
+# Основной метод в классе - это list_cycle -при его вызове - все остальные методы запускаются по-цепочке
+
 class GetAndSave:
+    '''Инициализируем копию, аргументом принимает парооль, от базы данных'''
+
     def __init__(self, passwd):
         self.passwd = passwd
         self.company_url = ''
 
     def read_list(self):
-
+        '''читает urlы из сompany_list.txt, возвращает список '''
         with open("company_list.txt", 'rt', encoding='utf-8') as file:
             company_list = []
             content = csv.reader(file, delimiter="\n")
@@ -16,10 +20,14 @@ class GetAndSave:
                 print(line[0])
                 company_list.append(line[0])
             return company_list
+
     def get_vacancy(self):
-        """Получает """
-        req = requests.get(f'{str(self.company_url)}')
-        data = req.content.decode()  # спер из одного мануала
+        """Получает от апи данные, возвращает словарь"""
+        params = { "found": 1, "per_page": 100,"pages": 100,"page": 0,"items": [{}]}
+        req = requests.get(
+            str(self.company_url), params)  # вот здесь я немного завис, как задать парметры , что бы
+        # возвращало не ограниченное количество вакансий, а все, по-этлму поставил 100
+        data = req.content.decode()
 
         req.close()
 
@@ -52,18 +60,17 @@ class GetAndSave:
                         (row['id'], row["name"], row["area"]['name'], row["address"]['city'],
                          row['employer']['name'], row['employer']['alternate_url'], row['salary']['from'],
                          row['salary']['to'], row['salary']['currency']))
-                    #count += 1
+                    # count += 1
                     conn.commit()
 
-                    #cur.execute("SELECT * FROM infor ")
+                    # cur.execute("SELECT * FROM infor ")
 
-                    #conn.commit
-                    #print(cur.fetchall())
+                    # conn.commit
+                    # print(cur.fetchall())
 
     def list_cycle(self):
+        """цикл которые итерируется по данным из self.read_list()"""
         company_list = self.read_list()
         for item in company_list:
             self.company_url = str(item)
             self.save()
-
-

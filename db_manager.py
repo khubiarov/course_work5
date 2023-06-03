@@ -2,15 +2,19 @@ import psycopg2
 
 class DBManager:
     def __init__(self, passwd):
+        '''Инициализатор принимает аргмументом пароль от бд'''
         self.passwd = passwd
 
     def command_sender(self, command):
+        '''Отправляет запрос на постгрис'''
+        # вот здесь кстати получилось сделать так, как в домашке хотел сделать, что бы менялась только ф-строка
+        # c запросом
         with psycopg2.connect(database='vacancy_db', user='postgres', password=self.passwd) as conn:
             with conn.cursor() as cur:
 
 
                     cur.execute(command)
-                    #conn.commit()
+                    #conn.commit() не помню зачем , не хочу убирать, потом, может пригодится
                     return cur.fetchall()
 
     def get_companies_and_vacancies_count(self):
@@ -78,4 +82,4 @@ class DBManager:
 #while True:
 #    copy1 = DBManager('')
 #    print(copy1.get_vacancies_with_keyword(input()))
-
+# по-хорошему цикл надо было тоже сделать отдельной функцией, но я не придумал как
