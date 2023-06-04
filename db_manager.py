@@ -41,7 +41,11 @@ class DBManager:
             print(f'{i}) {employer_name}, должность: {name}, от {salary_from} до {salary_to} {salary_currency}\n'
                   f'{employer_alternate_url}\n')
             if i % 10 == 0:
-                input('Press Enter')
+                usr_ans = input('Enter - next page, b - back')
+                if usr_ans.lower() == 'b':
+                    break
+
+                continue
     def get_avg_salary(self):
         """Получает среднюю зарплату по вакансиям."""
         #return self.command_sender('')
@@ -55,19 +59,15 @@ class DBManager:
 
         output = self.command_sender(f'SELECT * from infor WHERE salary_from > (select AVG(salary_from) '
                                    f'from infor)')
-        i = 0
-        for line in output:
-            i += 1
-            vacancy_id, name, area_name, address, employer_name,  employer_alternate_url, salary_from, salary_to,\
-                salary_currency = line
-            print(f'{i}) {vacancy_id}, {name}, {area_name}, {address}, {employer_name}, \n'
-                  f'{employer_alternate_url}, \n'
-                  f'от {salary_from}, до {salary_to}, {salary_currency}')
-            if i % 10 == 0:
-                input('Press Enter')
+        self.double_function(output)
     def get_vacancies_with_keyword(self,key_word):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”."""
         output = self.command_sender(f"SELECT * FROM infor WHERE LOWER(_name) IN (SELECT LOWER('{key_word}'));")
+        self.double_function(output)
+    @staticmethod
+    def double_function(output):
+        '''одинаковый код для двух последних методов''' # можно наверно было все так написать, но там немного разные
+                                                        # принты получаются
         i = 0
         for line in output:
             i += 1
@@ -77,7 +77,12 @@ class DBManager:
                   f'{employer_alternate_url}, \n'
                   f'от {salary_from}, до {salary_to}, {salary_currency}')
             if i % 10 == 0:
-                input('Press Enter')
+                usr_ans = input('Enter - next page, b - back')
+                if usr_ans.lower() == 'b':
+                    break
+
+                continue
+
 #формат запроса
 #while True:
 #    copy1 = DBManager('')

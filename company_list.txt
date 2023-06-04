@@ -1,3 +1,11 @@
 https://api.hh.ru/vacancies?employer_id=111928
 https://api.hh.ru/vacancies?employer_id=4511218
 https://api.hh.ru/vacancies?employer_id=9632383
+https://api.hh.ru/vacancies?employer_id=2651823
+https://api.hh.ru/vacancies?employer_id=5333428
+https://api.hh.ru/vacancies?employer_id=30637
+https://api.hh.ru/vacancies?employer_id=5999616
+https://api.hh.ru/vacancies?employer_id=1740
+https://api.hh.ru/vacancies?employer_id=9694561
+https://api.hh.ru/vacancies?employer_id=5974128
+https://api.hh.ru/vacancies?employer_id=43099
